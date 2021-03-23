@@ -30,16 +30,28 @@ public class PmsBrandController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PmsBrandController.class);
 
+    /**
+     * 获取所有品牌列表
+     *
+     * @return
+     */
     @ApiOperation("获取所有品牌列表")
     @RequestMapping(value = "/listAll", method = RequestMethod.GET)
-    @ResponseBody
     @PreAuthorize("hasAuthority('pms:brand:read')")
+    @ResponseBody
     public CommonResult<List<PmsBrand>> getBrandList() {
         return CommonResult.success(demoService.listAllBrand());
     }
 
+    /**
+     * 添加品牌
+     *
+     * @param pmsBrand
+     * @return
+     */
     @ApiOperation("添加品牌")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('pms:brand:create')")
     @ResponseBody
     public CommonResult createBrand(@RequestBody PmsBrand pmsBrand) {
         CommonResult commonResult;
@@ -54,8 +66,17 @@ public class PmsBrandController {
         return commonResult;
     }
 
+    /**
+     * 更新指定id品牌信息
+     *
+     * @param id
+     * @param pmsBrandDto
+     * @param result
+     * @return
+     */
     @ApiOperation("更新指定id品牌信息")
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('pms:brand:update')")
     @ResponseBody
     public CommonResult updateBrand(@PathVariable("id") Long id, @RequestBody PmsBrand pmsBrandDto, BindingResult result) {
         CommonResult commonResult;
@@ -70,8 +91,15 @@ public class PmsBrandController {
         return commonResult;
     }
 
+    /**
+     * 删除指定id的品牌
+     *
+     * @param id
+     * @return
+     */
     @ApiOperation("删除指定id的品牌")
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('pms:brand:delete')")
     @ResponseBody
     public CommonResult deleteBrand(@PathVariable("id") Long id) {
         int count = demoService.deleteBrand(id);
