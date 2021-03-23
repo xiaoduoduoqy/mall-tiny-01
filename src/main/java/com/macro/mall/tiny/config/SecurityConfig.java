@@ -37,12 +37,16 @@ import java.util.List;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-     @Autowired
-     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
-     @Autowired
-     RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+    @Autowired
+    RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+    @Autowired
+    RestfulAccessDeniedHandler restfulAccessDeniedHandler;
+    @Autowired
+    private UmsAdminService adminService;
+
     /**
      * 用于配置需要拦截的url路径、jwt过滤器及出异常后的处理器；
+     *
      * @param httpSecurity
      * @throws Exception
      */
@@ -83,8 +87,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     }
 
-    /**
+    /**JwtAuthenticationTokenFilter
+     RestAuthenticationEntryPoint
+     RestfulAccessDeniedHandler
      * 用于配置UserDetailsService及PasswordEncoder；
+     *
      * @param auth
      * @throws Exception
      */
@@ -96,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * SpringSecurity定义的用于对密码进行编码及比对的接口
+     *
      * @return
      */
     @Bean
@@ -110,14 +118,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             UmsAdmin admin = adminService.getAdminByUsername(username);
             if (admin != null) {
                 List<UmsPermission> permissionList = adminService.getPermissionList(admin.getId());
-                return new AdminUserDetails(admin,permissionList);
+                return new AdminUserDetails(admin, permissionList);
             }
             throw new UsernameNotFoundException("用户名或密码错误");
         };
     }
 
     @Bean
-    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){
+    public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
     }
 

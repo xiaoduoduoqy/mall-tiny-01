@@ -12,15 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: qianyong
- * Date: 2021/3/22
- * Time: 15:05
- * Description: 当访问接口没有权限时，自定义的返回结果
+ * 当访问接口没有权限时，自定义的返回结果
+ * Created by macro on 2018/4/26.
  */
 @Component
-public class RestfulAccessDeniedHandler implements AccessDeniedHandler {
-
+public class RestfulAccessDeniedHandler implements AccessDeniedHandler{
     @Override
     public void handle(HttpServletRequest request,
                        HttpServletResponse response,

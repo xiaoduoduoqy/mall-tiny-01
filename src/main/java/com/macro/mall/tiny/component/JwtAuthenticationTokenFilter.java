@@ -1,15 +1,5 @@
 package com.macro.mall.tiny.component;
 
-/**
- * Created with IntelliJ IDEA.
- * User: qianyong
- * Date: 2021/3/22
- * Time: 15:48
- * Description: 在用户名和密码校验前添加的过滤器，
- * 如果请求中有jwt的token且有效，会取出token中的用户名，
- * 然后调用SpringSecurity的API进行登录操作。
- */
-
 import com.macro.mall.tiny.common.utils.JwtTokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,4 +55,3 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 }
-
