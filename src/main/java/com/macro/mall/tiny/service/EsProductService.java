@@ -2,9 +2,6 @@ package com.macro.mall.tiny.service;
 
 
 import com.macro.mall.tiny.nosql.elasticsearch.document.EsProduct;
-import com.macro.mall.tiny.service.impl.EsProductServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
