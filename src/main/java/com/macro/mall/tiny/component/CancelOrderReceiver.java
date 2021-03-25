@@ -31,6 +31,6 @@ public class CancelOrderReceiver {
     @RabbitHandler
     public void handle2(String str) {
         LOGGER.info("receive delay message str:{}", str);
-        //portalOrderService.cancelOrder(orderId);
+        portalOrderService.cancelOrders();
     }
 }
