@@ -23,4 +23,10 @@ public interface OmsPortalOrderService {
      */
     @Transactional
     void cancelOrder(Long orderId);
+
+    /**
+     * 正常接收打款消息
+     */
+    @Transactional
+    void cancelOrders();
 }

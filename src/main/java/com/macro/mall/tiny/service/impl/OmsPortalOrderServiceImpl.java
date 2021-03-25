@@ -40,6 +40,12 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         LOGGER.info("process cancelOrder orderId:{}", orderId);
     }
 
+    @Override
+    public void cancelOrders() {
+        String string = "支付宝到账一亿";
+        LOGGER.info("process cancelOrder orderId:{}", string);
+    }
+
     /**
      * 开启一个延迟消息
      *
