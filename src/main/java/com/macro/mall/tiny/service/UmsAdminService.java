@@ -32,6 +32,8 @@ public interface UmsAdminService {
      */
     String login(String username, String password);
 
+
+
     /**
      * 获取用户所有权限（包括角色权限和+-权限）
      */

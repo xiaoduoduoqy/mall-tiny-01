@@ -1,10 +1,14 @@
 package com.macro.mall.tiny.service.impl;
 
+import com.macro.mall.tiny.common.exception.Asserts;
 import com.macro.mall.tiny.common.utils.JwtTokenUtil;
+import com.macro.mall.tiny.common.utils.RequestUtil;
 import com.macro.mall.tiny.dao.UmsAdminRoleRelationDao;
+import com.macro.mall.tiny.mbg.mapper.UmsAdminLoginLogMapper;
 import com.macro.mall.tiny.mbg.mapper.UmsAdminMapper;
 import com.macro.mall.tiny.mbg.model.UmsAdmin;
 import com.macro.mall.tiny.mbg.model.UmsAdminExample;
+import com.macro.mall.tiny.mbg.model.UmsAdminLoginLog;
 import com.macro.mall.tiny.mbg.model.UmsPermission;
 import com.macro.mall.tiny.service.UmsAdminService;
 import org.slf4j.Logger;
@@ -20,7 +24,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -46,6 +53,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     private UmsAdminMapper adminMapper;
     @Autowired
     private UmsAdminRoleRelationDao adminRoleRelationDao;
+    @Autowired
+    private UmsAdminLoginLogMapper loginLogMapper;
 
     /**
      * 根据用户名获取后台管理员
@@ -103,16 +112,39 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         try {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-                throw new BadCredentialsException("密码不正确");
+                Asserts.fail("密码不正确");
+            }
+            if (!userDetails.isEnabled()) {
+                Asserts.fail("帐号已被禁用");
             }
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
             token = jwtTokenUtil.generateToken(userDetails);
+            insertLoginLog(username);
         } catch (AuthenticationException e) {
             LOGGER.warn("登录异常:{}", e.getMessage());
         }
         return token;
     }
+
+    /**
+     * 添加登录记录
+     *
+     * @param username
+     */
+    private void insertLoginLog(String username) {
+        UmsAdmin admin = getAdminByUsername(username);
+        if(admin==null) return;
+        UmsAdminLoginLog loginLog = new UmsAdminLoginLog();
+        loginLog.setAdminId(admin.getId());
+        loginLog.setCreateTime(new Date());
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = attributes.getRequest();
+        loginLog.setIp(RequestUtil.getRequestIp(request));
+        loginLogMapper.insert(loginLog);
+    }
+
+
 
 
     /**
